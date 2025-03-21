@@ -16,6 +16,7 @@ export const useGlobalAuthenticationSlice: StateCreator<
     // Stores
     address: "",
     name: "",
+    loggedUser: undefined,
 
     // Modifiers
     connectWalletStore: async (address: string, name: string) => {
@@ -24,7 +25,7 @@ export const useGlobalAuthenticationSlice: StateCreator<
 
     disconnectWalletStore: () =>
       set(
-        { address: "", name: "" },
+        { address: "", name: "", loggedUser: undefined },
         false,
         AUTHENTICATION_ACTIONS.DISCONNECT_WALLET
       ),
