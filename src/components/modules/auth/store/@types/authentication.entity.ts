@@ -1,4 +1,4 @@
-import { User } from "@/@types/user.entity";
+import { User } from "@/components/@types/user";
 
 export interface AuthenticationGlobalStore {
   address: string;
