@@ -75,7 +75,7 @@ export default function AssetDetailsPage() {
               <h1 className="text-3xl font-bold">{asset.title}</h1>
               <p className="text-muted-foreground">Token: {asset.token}</p>
             </div>
-            <Badge size="lg" variant={asset.purchased ? "default" : "outline"}>
+            <Badge variant={asset.purchased ? "default" : "outline"}>
               {asset.purchased ? "Purchased" : "Not Purchased"}
             </Badge>
           </div>
