@@ -42,7 +42,7 @@ export const useGlobalAuthenticationSlice: StateCreator<
               address,
               name,
               loggedUser: userData,
-              isUserCreatedWithName: false,
+              isUserCreatedWithName: true,
             },
             false,
             AUTHENTICATION_ACTIONS.CONNECT_WALLET
