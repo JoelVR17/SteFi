@@ -1,5 +1,5 @@
 import { User } from "./user.entity";
-export interface asset {
+export interface Asset {
   title: string;
   monthly_fee: number;
   total_fee: number;
@@ -10,4 +10,5 @@ export interface asset {
   asset_provider: User;
   client: User;
   token: string;
+  monthly_payout: Record<number, bigint>;
 }
