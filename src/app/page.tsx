@@ -1,3 +1,6 @@
+"use client";
+
+import { Toaster } from "@/components/ui/sonner";
 import Header from "../components/layout/Header";
 
 export default function Home() {
@@ -12,6 +15,7 @@ export default function Home() {
           Main Content
         </div>
       </div>
+      <Toaster />
     </div>
   );
 }

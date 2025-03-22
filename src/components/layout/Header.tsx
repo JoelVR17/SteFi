@@ -8,11 +8,10 @@ import { IsUserCreatedDialog } from "../modules/auth/ui/dialogs/IsUserCreated";
 
 const Header = () => {
   const address = useGlobalAuthenticationStore((state) => state.address);
+  const loggedUser = useGlobalAuthenticationStore((state) => state.loggedUser);
   const isUserCreatedWithName = useGlobalAuthenticationStore(
     (state) => state.isUserCreatedWithName
   );
-
-  console.log(isUserCreatedWithName);
 
   const { handleConnect, handleDisconnect } = useWallet();
 
@@ -20,8 +19,12 @@ const Header = () => {
     <div className="flex w-full justify-between">
       <p>logo</p>
 
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-3">
         <div className="flex w-40">
+          <p className="truncate text-sm italic">{loggedUser?.name}</p>
+        </div>
+
+        <div className="flex gap-3 w-40">
           <p className="truncate text-sm italic">{address}</p>
         </div>
 

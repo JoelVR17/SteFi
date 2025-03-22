@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -6,10 +5,9 @@ import {
   UpdateUserInput,
 } from "../schema/update-user.schema";
 import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
+import { UserPayload } from "@/@types/user.entity";
 
 export const useEditProfileDialog = () => {
-  const [open, setOpen] = useState(false);
-
   const loggedUser = useGlobalAuthenticationStore((s) => s.loggedUser);
   const updateUser = useGlobalAuthenticationStore((s) => s.updateUser);
   const address = useGlobalAuthenticationStore((s) => s.address);
@@ -20,27 +18,16 @@ export const useEditProfileDialog = () => {
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
       name: loggedUser?.name || "",
-      role: loggedUser?.role || "client",
+      role: loggedUser?.role || "",
     },
+    mode: "onChange",
   });
 
-  useEffect(() => {
-    if (loggedUser) {
-      form.reset({
-        name: loggedUser.name || "",
-        role: loggedUser.role || "client",
-      });
-    }
-  }, [loggedUser, form]);
-
-  const onSubmit = async (data: UpdateUserInput) => {
-    await updateUser(address, data);
-    setOpen(false);
+  const onSubmit = async (payload: UserPayload) => {
+    await updateUser(address, payload);
   };
 
   return {
-    open,
-    setOpen,
     isUserCreatedWithName,
     form,
     onSubmit,

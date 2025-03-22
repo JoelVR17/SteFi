@@ -1,5 +1,4 @@
 import React from "react";
-import EditProfileForm from "../forms/CreateUser.form";
 import {
   DialogContent,
   DialogHeader,
@@ -8,6 +7,7 @@ import {
   Dialog,
 } from "@/components/ui/dialog";
 import { useIsUserCreated } from "./hooks/is-user-created.hook";
+import { EditProfileForm } from "../../forms/CreateProfileForm";
 
 interface IsUserCreatedProps {
   isOpen: boolean;
@@ -20,9 +20,9 @@ export function IsUserCreatedDialog({ isOpen }: IsUserCreatedProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="dark:text-white">Edit profile</DialogTitle>
+          <DialogTitle className="dark:text-white">Create profile</DialogTitle>
           <DialogDescription className="dark:text-gray-400">
-            Make changes to your profile here. Click save when you're done.
+            Complete your profile here!
           </DialogDescription>
         </DialogHeader>
 

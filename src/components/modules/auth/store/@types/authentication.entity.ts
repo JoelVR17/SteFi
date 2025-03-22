@@ -1,4 +1,6 @@
-import { User } from "@/components/@types/user";
+import { z } from "zod";
+import { updateUserSchema } from "../../schema/update-user.schema";
+import { User, UserPayload } from "@/@types/user.entity";
 
 export interface AuthenticationGlobalStore {
   address: string;
@@ -8,4 +10,6 @@ export interface AuthenticationGlobalStore {
 
   connectWalletStore: (address: string, name: string) => void;
   disconnectWalletStore: () => void;
+  updateUser: (address: string, payload: UserPayload) => void;
+  setIsUserCreatedWithName: (isUserCreatedWithName: boolean) => void;
 }

@@ -6,6 +6,7 @@ import {
   updateUser,
 } from "@/components/modules/auth/server/authentication.firebase";
 import { UserPayload } from "@/@types/user.entity";
+import { toast } from "sonner";
 
 const AUTHENTICATION_ACTIONS = {
   CONNECT_WALLET: "authentication/connect",
@@ -63,7 +64,6 @@ export const useGlobalAuthenticationSlice: StateCreator<
         false,
         AUTHENTICATION_ACTIONS.DISCONNECT_WALLET
       ),
-
     updateUser: async (address: string, payload: UserPayload) => {
       const { success, data } = await updateUser({ address, payload });
 
@@ -71,12 +71,18 @@ export const useGlobalAuthenticationSlice: StateCreator<
         set(
           {
             loggedUser: data,
-            isUserCreatedWithName: !!data.name,
+            isUserCreatedWithName: false,
           },
           false,
           AUTHENTICATION_ACTIONS.UPDATE_USER
         );
+
+        toast("Welcome to SteFi", {
+          description: "Your profile has been created successfully",
+        });
       }
     },
+    setIsUserCreatedWithName: (isUserCreatedWithName: boolean) =>
+      set({ isUserCreatedWithName }, false),
   };
 };
