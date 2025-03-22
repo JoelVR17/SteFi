@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, Wallet } from "lucide-react";
 import { useGlobalAuthenticationStore } from "../modules/auth/store/store";
 import { useWallet } from "../modules/auth/hooks/wallet.hook";
+import { IsUserCreatedDialog } from "../modules/auth/ui/dialogs/IsUserCreated";
 
 const Header = () => {
   const address = useGlobalAuthenticationStore((state) => state.address);
@@ -11,6 +12,7 @@ const Header = () => {
 
   return (
     <div className="flex w-full justify-between">
+      <IsUserCreatedDialog />
       <p>logo</p>
 
       <div className="flex items-center gap-5">
