@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+import { setCookie, deleteCookie } from "cookies-next";
 import { AuthenticationGlobalStore } from "../@types/authentication.entity";
 import {
   addUser,
@@ -56,14 +57,30 @@ export const useGlobalAuthenticationSlice: StateCreator<
           AUTHENTICATION_ACTIONS.CONNECT_WALLET
         );
       }
+      setCookie("walletAddress", address, {
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      });
+
+      setCookie("userRole", data.role ?? "client", {
+        maxAge: 60 * 60 * 24 * 7,
+        path: "/",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      });
     },
 
-    disconnectWalletStore: () =>
+    disconnectWalletStore: () => {
+      deleteCookie("walletAddress", { path: "/" });
       set(
         { address: "", name: "", loggedUser: undefined },
         false,
         AUTHENTICATION_ACTIONS.DISCONNECT_WALLET
-      ),
+      );
+    },
+
     updateUser: async (address: string, payload: UserPayload) => {
       const { success, data } = await updateUser({ address, payload });
 

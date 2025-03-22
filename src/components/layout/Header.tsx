@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { LogOut, Wallet } from "lucide-react";
 import { useGlobalAuthenticationStore } from "../modules/auth/store/store";
 import { useWallet } from "../modules/auth/hooks/wallet.hook";
 import { IsUserCreatedDialog } from "../modules/auth/ui/dialogs/IsUserCreated";
+import Image from "next/image";
 
 const Header = () => {
   const address = useGlobalAuthenticationStore((state) => state.address);
@@ -17,7 +19,9 @@ const Header = () => {
 
   return (
     <div className="flex w-full justify-between">
-      <p>logo</p>
+      <Link href="/">
+        <Image width={170} height={10} src="/favicon.ico" alt="logo" />
+      </Link>
 
       <div className="flex items-center gap-3">
         <div className="flex w-40">

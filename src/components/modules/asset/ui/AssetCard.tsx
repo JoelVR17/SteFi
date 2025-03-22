@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { RelativeTime } from "./RelativeTime";
+import Link from "next/link";
 
 interface AssetUser {
   name?: string;
@@ -156,6 +157,15 @@ export default function AssetCard({ asset }: { asset: Asset }) {
             </p>
             <RelativeTime date={demoAsset.deadline} />
           </div>
+        </div>
+
+        <div className="pt-2">
+          <Link
+            href={`/client/${demoAsset.token}`}
+            className="w-full cursor-pointer"
+          >
+            <Button className="w-full">View Details</Button>
+          </Link>
         </div>
       </CardContent>
 
