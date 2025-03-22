@@ -23,6 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { RelativeTime } from "./RelativeTime";
 
 interface AssetUser {
   name?: string;
@@ -139,33 +140,21 @@ export default function AssetCard({ asset }: { asset: Asset }) {
               <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
               Next Due Date
             </p>
-            <p className="text-sm">
-              {formatDistanceToNow(new Date(demoAsset.next_due_date), {
-                addSuffix: true,
-              })}
-            </p>
+            <RelativeTime date={demoAsset.next_due_date} />
           </div>
           <div className="flex justify-between items-center">
             <p className="text-sm font-medium flex items-center">
               <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
               Grace Period Ends
             </p>
-            <p className="text-sm">
-              {formatDistanceToNow(new Date(demoAsset.grace_period_end), {
-                addSuffix: true,
-              })}
-            </p>
+            <RelativeTime date={demoAsset.grace_period_end} />
           </div>
           <div className="flex justify-between items-center">
             <p className="text-sm font-medium flex items-center">
               <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
               Deadline
             </p>
-            <p className="text-sm">
-              {formatDistanceToNow(new Date(demoAsset.deadline), {
-                addSuffix: true,
-              })}
-            </p>
+            <RelativeTime date={demoAsset.deadline} />
           </div>
         </div>
       </CardContent>
