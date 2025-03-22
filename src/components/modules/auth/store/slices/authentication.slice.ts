@@ -3,7 +3,9 @@ import { AuthenticationGlobalStore } from "../@types/authentication.entity";
 import {
   addUser,
   getUser,
+  updateUser,
 } from "@/components/modules/auth/server/authentication.firebase";
+import { UserPayload } from "@/@types/user.entity";
 
 const AUTHENTICATION_ACTIONS = {
   CONNECT_WALLET: "authentication/connect",
@@ -61,5 +63,20 @@ export const useGlobalAuthenticationSlice: StateCreator<
         false,
         AUTHENTICATION_ACTIONS.DISCONNECT_WALLET
       ),
+
+    updateUser: async (address: string, payload: UserPayload) => {
+      const { success, data } = await updateUser({ address, payload });
+
+      if (success) {
+        set(
+          {
+            loggedUser: data,
+            isUserCreatedWithName: !!data.name,
+          },
+          false,
+          AUTHENTICATION_ACTIONS.UPDATE_USER
+        );
+      }
+    },
   };
 };

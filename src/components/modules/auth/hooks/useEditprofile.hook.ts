@@ -20,7 +20,7 @@ export const useEditProfileDialog = () => {
     resolver: zodResolver(updateUserSchema),
     defaultValues: {
       name: loggedUser?.name || "",
-      role: loggedUser?.role || "user",
+      role: loggedUser?.role || "client",
     },
   });
 
@@ -28,7 +28,7 @@ export const useEditProfileDialog = () => {
     if (loggedUser) {
       form.reset({
         name: loggedUser.name || "",
-        role: loggedUser.role || "user",
+        role: loggedUser.role || "client",
       });
     }
   }, [loggedUser, form]);
