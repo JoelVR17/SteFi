@@ -7,15 +7,22 @@ import {
   DialogDescription,
   Dialog,
 } from "@/components/ui/dialog";
+import { useIsUserCreated } from "./hooks/is-user-created.hook";
 
-export default function IsUserCreated() {
+interface IsUserCreatedProps {
+  isOpen: boolean;
+}
+
+export function IsUserCreatedDialog({ isOpen }: IsUserCreatedProps) {
+  const { handleClose } = useIsUserCreated();
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when youre done.
+          <DialogTitle className="dark:text-white">Edit profile</DialogTitle>
+          <DialogDescription className="dark:text-gray-400">
+            Make changes to your profile here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
 

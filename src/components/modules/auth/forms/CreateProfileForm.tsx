@@ -1,6 +1,5 @@
 "use client";
 
-import { useEditProfileDialog } from "@/components/hooks/useEditProfileDialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useEditProfileDialog } from "../hooks/useEditprofile.hook";
 
 export const EditProfileForm = () => {
   const { form, onSubmit, setOpen } = useEditProfileDialog();
@@ -50,16 +50,15 @@ export const EditProfileForm = () => {
           <Select
             value={watch("role")}
             onValueChange={(value) =>
-              setValue("role", value as "admin" | "user" | "guest")
+              setValue("role", value as "assetProvider" | "client")
             }
           >
             <SelectTrigger className="col-span-3">
               <SelectValue placeholder="Select a role" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="admin">Admin</SelectItem>
-              <SelectItem value="user">User</SelectItem>
-              <SelectItem value="guest">Guest</SelectItem>
+              <SelectItem value="assetProvider">assetProvider</SelectItem>
+              <SelectItem value="client">Client</SelectItem>
             </SelectContent>
           </Select>
         </div>
