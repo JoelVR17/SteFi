@@ -22,7 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Label } from "@/components/ui/label";
 import {
   FormControl,
   FormField,
@@ -48,8 +47,6 @@ export default function AssetProviderDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<any>(null);
   const address = useGlobalAuthenticationStore((state) => state.address);
-
-  const [deadline, setDeadline] = useState<number>();
 
   const [assets, setAssets] = useState<AssetWithId[]>([]);
 
@@ -101,7 +98,6 @@ export default function AssetProviderDashboard() {
     setEditingAsset(null);
   };
 
-  console.log(assets);
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="space-y-6">

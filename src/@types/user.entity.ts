@@ -1,9 +1,5 @@
 import { CreatedAt } from "./dates.entity";
 
-enum userRole {
-  ASSETPROVIDER = "assetProvider",
-  CLIENT = "client",
-}
 export interface User {
   id: string;
   createdAt: CreatedAt;

@@ -7,7 +7,7 @@ import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/st
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
-const page = () => {
+const PageAsset = () => {
   const { id } = useParams();
   const [asset, setAsset] = useState<AssetWithId>();
   const address = useGlobalAuthenticationStore((state) => state.address);
@@ -39,4 +39,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default PageAsset;
