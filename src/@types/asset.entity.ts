@@ -12,3 +12,7 @@ export interface Asset {
   token: string;
   monthly_payout: Record<number, bigint>;
 }
+
+export interface AssetPayload extends Omit<Asset, "monthly_payout"> {
+  monthly_payout: Record<string, string>;
+}

@@ -322,7 +322,7 @@ export default function AssetProviderDashboard() {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Escrow title"
+                          placeholder="Title"
                           {...field}
                           onChange={(e) => {
                             field.onChange(e);
