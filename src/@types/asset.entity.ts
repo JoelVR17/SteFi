@@ -1,4 +1,3 @@
-import { User } from "./user.entity";
 export interface Asset {
   title: string;
   monthly_fee: number;
@@ -7,7 +6,7 @@ export interface Asset {
   deadline: number;
   next_due_date: number;
   grace_period_end: number;
-  asset_provider: User;
+  asset_provider: string;
   client: string;
   monthly_payout: Record<number, bigint>;
 }
