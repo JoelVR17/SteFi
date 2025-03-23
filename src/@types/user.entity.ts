@@ -4,7 +4,7 @@ export interface User {
   id: string;
   createdAt: CreatedAt;
   name: string;
-  address: string;
+  address?: string;
   role: "assetProvider" | "client" | "";
 }
 

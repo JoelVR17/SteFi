@@ -5,7 +5,6 @@ import {
   UpdateUserInput,
 } from "../schema/update-user.schema";
 import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
-import { UserPayload } from "@/@types/user.entity";
 import { useRouter } from "next/navigation";
 
 export const useEditProfileDialog = () => {
@@ -26,11 +25,14 @@ export const useEditProfileDialog = () => {
     mode: "onChange",
   });
 
-  const onSubmit = async (payload: UserPayload) => {
+  const onSubmit = async (payload: any) => {
     const user = await updateUser(address, payload);
-    router.push(
-      `/${user?.role == "assetProvider" ? "asset-provider" : "client"}`
-    );
+
+    if (user.role == "assetProvider") {
+      router.push("/asset-provider");
+    } else {
+      router.push("/client");
+    }
   };
 
   return {
