@@ -101,6 +101,7 @@ export default function AssetProviderDashboard() {
     setEditingAsset(null);
   };
 
+  console.log(assets);
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="space-y-6">
@@ -297,7 +298,7 @@ export default function AssetProviderDashboard() {
                                 )}
                               >
                                 {field.value ? (
-                                  formatDate(field.value)
+                                  formatDate(field.value) // Asegurarse de formatear como fecha
                                 ) : (
                                   <span>Pick a date</span>
                                 )}
@@ -308,11 +309,11 @@ export default function AssetProviderDashboard() {
                           <PopoverContent className="w-auto p-0" align="start">
                             <Calendar
                               mode="single"
-                              selected={field.value}
-                              onSelect={field.onChange}
-                              disabled={(date: any) =>
-                                date > new Date() ||
-                                date < new Date("1900-01-01")
+                              selected={
+                                field.value ? new Date(field.value) : undefined
+                              }
+                              onSelect={(date) =>
+                                field.onChange(date?.getTime() || null)
                               }
                               initialFocus
                             />
@@ -323,40 +324,6 @@ export default function AssetProviderDashboard() {
                     )}
                   />
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="end_date">
-                    <Calendar className="h-4 w-4 inline mr-2" />
-                    End Date
-                  </Label>
-                  <Input
-                    id="end_date"
-                    type="date"
-                    defaultValue={
-                      editingAsset
-                        ? formatDateForInput(editingAsset.end_date)
-                        : ""
-                    }
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="next_payment">
-                  <Calendar className="h-4 w-4 inline mr-2" />
-                  Next Payment Date
-                </Label>
-                <Input
-                  id="next_payment"
-                  type="date"
-                  defaultValue={
-                    editingAsset
-                      ? formatDateForInput(editingAsset.next_payment)
-                      : ""
-                  }
-                  required
-                />
               </div>
 
               <div className="space-y-2">

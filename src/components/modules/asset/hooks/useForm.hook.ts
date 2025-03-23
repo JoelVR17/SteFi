@@ -28,7 +28,6 @@ export const useFormHook = () => {
   });
 
   const onSubmit = async (formData: any) => {
-    console.log(formData);
     const { token, monthly_payout, ...rest } = formData;
 
     const convertedMonthlyPayout: Record<string, string> = {};
@@ -40,8 +39,13 @@ export const useFormHook = () => {
     const payload = {
       ...rest,
       asset_provider: address,
+      deadline: formData.deadline
+        ? new Date(formData.deadline).getTime()
+        : null,
       monthly_payout: convertedMonthlyPayout,
     };
+
+    console.log(payload);
 
     const response = await addAsset({ payload });
 

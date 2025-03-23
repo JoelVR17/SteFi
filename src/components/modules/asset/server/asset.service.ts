@@ -82,8 +82,6 @@ const getAssetsByUser = async (
       id: doc.id,
     }));
 
-    console.log(assets);
-
     if (assets.length === 0) {
       return {
         success: false,
