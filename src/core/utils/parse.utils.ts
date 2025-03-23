@@ -54,7 +54,9 @@ export function parseAsset(assetProperties: Asset) {
   return StellarSDK.xdr.ScVal.scvMap([
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("asset_provider"),
-      val: StellarSDK.Address.fromString(asset_provider.address).toScVal(),
+      val: StellarSDK.Address.fromString(
+        asset_provider.address || ""
+      ).toScVal(),
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("client"),
