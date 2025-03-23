@@ -1,8 +1,6 @@
 "use client";
-import { formatDistanceToNow } from "date-fns";
+import { remainingTime } from "@/core/utils/parse.utils";
 
 export function RelativeTime({ date }: { date: number }) {
-  return (
-    <span>{formatDistanceToNow(new Date(date), { addSuffix: true })}</span>
-  );
+  return <span>{remainingTime(date)}</span>;
 }

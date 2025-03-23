@@ -1,14 +1,11 @@
 "use client";
 
-import type React from "react";
 import { useEffect, useState } from "react";
-import { Search, Filter, Download, Plus, Calendar } from "lucide-react";
-import type { Asset, AssetWithId } from "@/@types/asset.entity";
+import { Plus, CalendarIcon } from "lucide-react";
+import type { AssetWithId } from "@/@types/asset.entity";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -39,13 +36,20 @@ import { getAssetsByUser } from "@/components/modules/asset/server/asset.service
 import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
 import Link from "next/link";
 import { shortenAddress } from "../../components/modules/client/hooks/useShortenAddress.hook";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
 
 export default function AssetProviderDashboard() {
-  const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState("details");
   const address = useGlobalAuthenticationStore((state) => state.address);
+
+  const [deadline, setDeadline] = useState<number>();
 
   const [assets, setAssets] = useState<AssetWithId[]>([]);
 
@@ -90,7 +94,6 @@ export default function AssetProviderDashboard() {
   const handleOpenModal = (asset = null) => {
     setEditingAsset(asset);
     setIsModalOpen(true);
-    setActiveTab("details");
   };
 
   const handleCloseModal = () => {
@@ -277,19 +280,47 @@ export default function AssetProviderDashboard() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="start_date">
-                    <Calendar className="h-4 w-4 inline mr-2" />
-                    Start Date
-                  </Label>
-                  <Input
-                    id="start_date"
-                    type="date"
-                    defaultValue={
-                      editingAsset
-                        ? formatDateForInput(editingAsset.start_date)
-                        : ""
-                    }
-                    required
+                  <FormField
+                    control={form.control}
+                    name="deadline"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col">
+                        <FormLabel>Deadline</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-[240px] pl-3 text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  formatDate(field.value)
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date: any) =>
+                                date > new Date() ||
+                                date < new Date("1900-01-01")
+                              }
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
 

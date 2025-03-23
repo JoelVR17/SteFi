@@ -62,11 +62,15 @@ export function parseAsset(assetProperties: Asset) {
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("deadline"),
-      val: StellarSDK.xdr.ScVal.scvU64(StellarSDK.xdr.Uint64.fromString(deadline.toString())),
+      val: StellarSDK.xdr.ScVal.scvU64(
+        StellarSDK.xdr.Uint64.fromString(deadline.toString())
+      ),
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("grace_period_end"),
-      val: StellarSDK.xdr.ScVal.scvU64(StellarSDK.xdr.Uint64.fromString(grace_period_end.toString())),
+      val: StellarSDK.xdr.ScVal.scvU64(
+        StellarSDK.xdr.Uint64.fromString(grace_period_end.toString())
+      ),
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("monthly_fee"),
@@ -80,7 +84,9 @@ export function parseAsset(assetProperties: Asset) {
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("next_due_date"),
-      val: StellarSDK.xdr.ScVal.scvU64(StellarSDK.xdr.Uint64.fromString(next_due_date.toString())),
+      val: StellarSDK.xdr.ScVal.scvU64(
+        StellarSDK.xdr.Uint64.fromString(next_due_date.toString())
+      ),
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("purchased"),
@@ -100,3 +106,21 @@ export function parseAsset(assetProperties: Asset) {
     }),
   ]);
 }
+
+export const remainingTime = (timestamp: number) => {
+  const now = Date.now();
+  const diference = timestamp - now;
+
+  console.log("now:", now, "timestamp:", timestamp, "diference:", diference);
+
+  if (diference <= 0) {
+    return "The deadline has passed";
+  }
+
+  const seconds = Math.floor(diference / 1000) % 60;
+  const minutes = Math.floor(diference / (1000 * 60)) % 60;
+  const hours = Math.floor(diference / (1000 * 60 * 60)) % 24;
+  const days = Math.floor(diference / (1000 * 60 * 60 * 24));
+
+  return `${days} días, ${hours} horas, ${minutes} minutos, ${seconds} segundos`;
+};

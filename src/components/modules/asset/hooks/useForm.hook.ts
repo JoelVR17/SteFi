@@ -16,9 +16,9 @@ export const useFormHook = () => {
       monthly_fee: 0,
       total_fee: 0,
       purchased: false,
-      deadline: Date.now(),
-      next_due_date: Date.now(),
-      grace_period_end: Date.now(),
+      deadline: 0,
+      next_due_date: 0,
+      grace_period_end: 0,
       asset_provider: address,
       client: "",
       token: "",
@@ -28,6 +28,7 @@ export const useFormHook = () => {
   });
 
   const onSubmit = async (formData: any) => {
+    console.log(formData);
     const { token, monthly_payout, ...rest } = formData;
 
     const convertedMonthlyPayout: Record<string, string> = {};
