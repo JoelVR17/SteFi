@@ -1,7 +1,7 @@
-import { asset } from "../../../../@types/asset.entity";
+import { Asset } from "@stellar/stellar-sdk";
 import { mockUsers } from "./user.mock";
 
-export const mockAssets: asset[] = [
+export const mockAssets: Asset[] = [
   {
     title: "Premium Analytics Tool",
     monthly_fee: 100,

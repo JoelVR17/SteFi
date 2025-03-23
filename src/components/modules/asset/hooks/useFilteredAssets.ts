@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { Asset } from "@/components/modules/asset/types";
 import { mockAssets } from "@/components/modules/asset/data/assets.mock";
+import { Asset } from "@stellar/stellar-sdk";
 
 export type FilterStatus = "all" | "purchased" | "not-purchased";
 

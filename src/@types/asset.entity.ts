@@ -9,7 +9,6 @@ export interface Asset {
   grace_period_end: number;
   asset_provider: User;
   client: string;
-  token: string;
   monthly_payout: Record<number, bigint>;
 }
 

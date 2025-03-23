@@ -37,7 +37,6 @@ export const useFormHook = () => {
 
     const payload = {
       ...rest,
-      token: process.env.NEXT_PUBLIC_TOKEN,
       asset_provider: address,
       monthly_payout: convertedMonthlyPayout,
     };
