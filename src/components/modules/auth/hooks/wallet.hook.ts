@@ -21,15 +21,15 @@ export const useWallet = () => {
 
         const user = await connectWalletStore(address, name);
 
-        // if (!isUserCreatedWithName) {
-        //   if (user?.role === "client") {
-        //     router.push("/client");
-        //   } else if (user?.role === "assetProvider") {
-        //     router.push("/asset-provider");
-        //   } else {
-        //     router.push("/client");
-        //   }
-        // }
+        if (!isUserCreatedWithName) {
+          if (user?.role === "client") {
+            router.push("/client");
+          } else if (user?.role === "assetProvider") {
+            router.push("/asset-provider");
+          } else {
+            router.push("/client");
+          }
+        }
       },
     });
   };
