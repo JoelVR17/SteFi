@@ -53,131 +53,27 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
-const leasedAssets = [
-  {
-    id: "AST-001",
-    title: "Premium Analytics Tool",
-    description:
-      "Advanced analytics platform with real-time data processing and visualization capabilities.",
-    monthly_fee: 100,
-    total_fee: 1200,
-    client: {
-      name: "Bob Smith",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    status: "active",
-    start_date: "2023-01-15T10:30:00Z",
-    end_date: "2024-01-15T10:30:00Z",
-    next_payment: "2023-04-15T10:30:00Z",
-  },
-  {
-    id: "AST-002",
-    title: "CRM License",
-    description:
-      "Enterprise CRM solution for managing customer relationships and sales pipelines.",
-    monthly_fee: 80,
-    total_fee: 960,
-    client: { name: "Jane Doe", avatar: "/placeholder.svg?height=40&width=40" },
-    status: "active",
-    start_date: "2023-02-20T14:45:00Z",
-    end_date: "2024-02-20T14:45:00Z",
-    next_payment: "2023-04-20T14:45:00Z",
-  },
-  {
-    id: "AST-003",
-    title: "Cloud Hosting",
-    description:
-      "Scalable cloud hosting solution with dedicated resources and 24/7 support.",
-    monthly_fee: 150,
-    total_fee: 1800,
-    client: {
-      name: "David Johnson",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    status: "active",
-    start_date: "2022-11-05T09:15:00Z",
-    end_date: "2023-11-05T09:15:00Z",
-    next_payment: "2023-04-05T09:15:00Z",
-  },
-  {
-    id: "AST-004",
-    title: "Design Software",
-    description:
-      "Professional design suite with advanced tools for graphic design and UI/UX work.",
-    monthly_fee: 60,
-    total_fee: 720,
-    client: {
-      name: "Sarah Williams",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    status: "overdue",
-    start_date: "2023-03-10T16:20:00Z",
-    end_date: "2024-03-10T16:20:00Z",
-    next_payment: "2023-03-10T16:20:00Z",
-  },
-  {
-    id: "AST-005",
-    title: "Marketing Automation",
-    description:
-      "Comprehensive marketing automation platform for email campaigns and lead generation.",
-    monthly_fee: 120,
-    total_fee: 1440,
-    client: {
-      name: "Michael Brown",
-      avatar: "/placeholder.svg?height=40&width=40",
-    },
-    status: "pending",
-    start_date: "2023-03-18T11:10:00Z",
-    end_date: "2024-03-18T11:10:00Z",
-    next_payment: "2023-04-18T11:10:00Z",
-  },
-];
-
-// Mock clients for dropdown
-const availableClients = [
-  {
-    id: "CLT-001",
-    name: "Bob Smith",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "CLT-002",
-    name: "Jane Doe",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "CLT-003",
-    name: "David Johnson",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "CLT-004",
-    name: "Sarah Williams",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "CLT-005",
-    name: "Michael Brown",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "CLT-006",
-    name: "Emily Davis",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-  {
-    id: "CLT-007",
-    name: "James Wilson",
-    avatar: "/placeholder.svg?height=40&width=40",
-  },
-];
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { useFormHook } from "@/components/modules/asset/hooks/useForm.hook";
+import { Form, FormProvider } from "react-hook-form";
+import {
+  leasedAssets,
+  availableClients,
+} from "@/components/modules/asset/data/leased.mock";
 
 export default function AssetProviderDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("details");
+
+  const { form, onSubmit } = useFormHook();
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -319,7 +215,6 @@ export default function AssetProviderDashboard() {
                   <TableHead>End Date</TableHead>
                   <TableHead>Next Payment</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -359,51 +254,6 @@ export default function AssetProviderDashboard() {
                         >
                           {asset.status}
                         </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleOpenModal(asset)}
-                          >
-                            Edit
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="sm">
-                                More
-                                <MoreHorizontal className="ml-2 h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-56">
-                              <DropdownMenuLabel>
-                                Manage Asset
-                              </DropdownMenuLabel>
-                              <DropdownMenuItem>View details</DropdownMenuItem>
-                              <DropdownMenuItem>
-                                Update pricing
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>Modify terms</DropdownMenuItem>
-                              <DropdownMenuItem>
-                                Contact client
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuLabel>
-                                Asset Status
-                              </DropdownMenuLabel>
-                              <DropdownMenuItem>
-                                Mark as active
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                Mark as pending
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="text-destructive">
-                                Terminate lease
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
                       </TableCell>
                     </TableRow>
                   ))
@@ -459,199 +309,175 @@ export default function AssetProviderDashboard() {
             </DialogDescription>
           </DialogHeader>
 
-          <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="pricing">Pricing</TabsTrigger>
-              <TabsTrigger value="client">Client</TabsTrigger>
-            </TabsList>
+          <FormProvider {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center">
+                        Title<span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Escrow title"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-            <form onSubmit={handleSaveAsset}>
-              <TabsContent value="details" className="space-y-4 mt-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Asset Title</Label>
-                  <Input
-                    id="title"
-                    placeholder="Enter asset title"
-                    defaultValue={editingAsset?.title || ""}
-                    required
+                  <FormField
+                    control={form.control}
+                    name="monthly_fee"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center">
+                          Monthly Fee
+                          <span className="text-destructive ml-1">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            placeholder="Monthly Fee"
+                            {...field}
+                            onChange={(e) => {
+                              const value = e.target.value
+                                ? Number(e.target.value)
+                                : "";
+                              field.onChange(value);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Describe your asset"
-                    rows={4}
-                    defaultValue={editingAsset?.description || ""}
+                  <FormField
+                    control={form.control}
+                    name="total_fee"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center">
+                          Total Fee
+                          <span className="text-destructive ml-1">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Total Fee"
+                            {...field}
+                            onChange={(e) => {
+                              const value = e.target.value
+                                ? Number(e.target.value)
+                                : "";
+                              field.onChange(value);
+                            }}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
+              </div>
 
+              <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
-                  <Select defaultValue={editingAsset?.status || "active"}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">Active</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="overdue">Overdue</SelectItem>
-                      <SelectItem value="terminated">Terminated</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="pricing" className="space-y-4 mt-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="monthly_fee">
-                      <CreditCard className="h-4 w-4 inline mr-2" />
-                      Monthly Fee
-                    </Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                        $
-                      </span>
-                      <Input
-                        id="monthly_fee"
-                        type="number"
-                        className="pl-8"
-                        defaultValue={editingAsset?.monthly_fee || ""}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="total_fee">
-                      <CreditCard className="h-4 w-4 inline mr-2" />
-                      Total Contract Value
-                    </Label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2">
-                        $
-                      </span>
-                      <Input
-                        id="total_fee"
-                        type="number"
-                        className="pl-8"
-                        defaultValue={editingAsset?.total_fee || ""}
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="start_date">
-                      <Calendar className="h-4 w-4 inline mr-2" />
-                      Start Date
-                    </Label>
-                    <Input
-                      id="start_date"
-                      type="date"
-                      defaultValue={
-                        editingAsset
-                          ? formatDateForInput(editingAsset.start_date)
-                          : ""
-                      }
-                      required
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="end_date">
-                      <Calendar className="h-4 w-4 inline mr-2" />
-                      End Date
-                    </Label>
-                    <Input
-                      id="end_date"
-                      type="date"
-                      defaultValue={
-                        editingAsset
-                          ? formatDateForInput(editingAsset.end_date)
-                          : ""
-                      }
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="next_payment">
+                  <Label htmlFor="start_date">
                     <Calendar className="h-4 w-4 inline mr-2" />
-                    Next Payment Date
+                    Start Date
                   </Label>
                   <Input
-                    id="next_payment"
+                    id="start_date"
                     type="date"
                     defaultValue={
                       editingAsset
-                        ? formatDateForInput(editingAsset.next_payment)
+                        ? formatDateForInput(editingAsset.start_date)
                         : ""
                     }
                     required
                   />
                 </div>
-              </TabsContent>
 
-              <TabsContent value="client" className="space-y-4 mt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="client">
-                    <User className="h-4 w-4 inline mr-2" />
-                    Assign Client
+                  <Label htmlFor="end_date">
+                    <Calendar className="h-4 w-4 inline mr-2" />
+                    End Date
                   </Label>
-                  <Select defaultValue={editingAsset?.client?.name || ""}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a client" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {availableClients.map((client) => (
-                        <SelectItem key={client.id} value={client.name}>
-                          <div className="flex items-center">
-                            <Avatar className="h-6 w-6 mr-2">
-                              <AvatarImage src={client.avatar} />
-                              <AvatarFallback>{client.name[0]}</AvatarFallback>
-                            </Avatar>
-                            {client.name}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id="end_date"
+                    type="date"
+                    defaultValue={
+                      editingAsset
+                        ? formatDateForInput(editingAsset.end_date)
+                        : ""
+                    }
+                    required
+                  />
                 </div>
+              </div>
 
-                <div className="pt-4">
-                  <Button variant="outline" type="button" className="w-full">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add New Client
-                  </Button>
-                </div>
-              </TabsContent>
+              <div className="space-y-2">
+                <Label htmlFor="next_payment">
+                  <Calendar className="h-4 w-4 inline mr-2" />
+                  Next Payment Date
+                </Label>
+                <Input
+                  id="next_payment"
+                  type="date"
+                  defaultValue={
+                    editingAsset
+                      ? formatDateForInput(editingAsset.next_payment)
+                      : ""
+                  }
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <FormField
+                  control={form.control}
+                  name="client"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex items-center">
+                        Client<span className="text-destructive ml-1">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Client address"
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <DialogFooter className="mt-6">
-                <Button
-                  variant="outline"
-                  type="button"
-                  onClick={handleCloseModal}
-                >
-                  <X className="mr-2 h-4 w-4" />
-                  Cancel
-                </Button>
-                <Button type="submit">
-                  {editingAsset ? "Save Changes" : "Create Asset"}
+                <Button className="cursor-pointer" type="submit">
+                  Create Asset
                 </Button>
               </DialogFooter>
             </form>
-          </Tabs>
+          </FormProvider>
         </DialogContent>
       </Dialog>
     </div>

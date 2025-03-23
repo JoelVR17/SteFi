@@ -6,8 +6,11 @@ import {
 } from "../schema/update-user.schema";
 import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
 import { UserPayload } from "@/@types/user.entity";
+import { useRouter } from "next/navigation";
 
 export const useEditProfileDialog = () => {
+  const router = useRouter();
+
   const loggedUser = useGlobalAuthenticationStore((s) => s.loggedUser);
   const updateUser = useGlobalAuthenticationStore((s) => s.updateUser);
   const address = useGlobalAuthenticationStore((s) => s.address);
@@ -25,6 +28,7 @@ export const useEditProfileDialog = () => {
 
   const onSubmit = async (payload: UserPayload) => {
     await updateUser(address, payload);
+    router.push("/" + loggedUser?.role);
   };
 
   return {

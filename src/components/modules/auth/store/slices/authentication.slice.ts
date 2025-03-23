@@ -33,12 +33,16 @@ export const useGlobalAuthenticationSlice: StateCreator<
     connectWalletStore: async (address: string, name: string) => {
       const { success, data } = await getUser({ address });
 
+      let user = null;
+
       if (!success) {
         const { success: registrationSuccess, data: userData } = await addUser({
           address,
         });
 
         if (registrationSuccess) {
+          user = userData;
+
           set(
             {
               address,
@@ -49,27 +53,38 @@ export const useGlobalAuthenticationSlice: StateCreator<
             false,
             AUTHENTICATION_ACTIONS.CONNECT_WALLET
           );
+
+          return user;
         }
       } else {
+        user = data;
+
         set(
-          { address, name, loggedUser: data },
+          {
+            address,
+            name,
+            loggedUser: data,
+          },
           false,
           AUTHENTICATION_ACTIONS.CONNECT_WALLET
         );
       }
+
       setCookie("walletAddress", address, {
-        maxAge: 60 * 60 * 24 * 7,
         path: "/",
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24 * 7,
       });
 
-      setCookie("userRole", data.role ?? "client", {
-        maxAge: 60 * 60 * 24 * 7,
+      setCookie("userRole", user?.role ?? "client", {
         path: "/",
         sameSite: "lax",
         secure: process.env.NODE_ENV === "production",
+        maxAge: 60 * 60 * 24 * 7,
       });
+
+      return user;
     },
 
     disconnectWalletStore: () => {

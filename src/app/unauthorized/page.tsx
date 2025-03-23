@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Lock, ArrowLeft, LogIn, HelpCircle } from "lucide-react";
+import { Lock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,36 +31,12 @@ export default function UnauthorizedPage() {
               expired.
             </p>
           </div>
-
-          <div className="space-y-2 text-sm text-muted-foreground">
-            <p>You might want to:</p>
-            <ul className="list-disc pl-5 text-left space-y-1">
-              <li>Log in with valid credentials</li>
-              <li>Check if your session has expired</li>
-              <li>Verify you have the necessary permissions</li>
-              <li>
-                Contact your administrator if you believe this is an error
-              </li>
-            </ul>
-          </div>
         </CardContent>
         <CardFooter className="flex flex-col sm:flex-row gap-2">
           <Button variant="outline" className="w-full sm:w-auto" asChild>
             <Link href="/">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Home
-            </Link>
-          </Button>
-          <Button className="w-full sm:w-auto" asChild>
-            <Link href="/login">
-              <LogIn className="mr-2 h-4 w-4" />
-              Log In
-            </Link>
-          </Button>
-          <Button variant="outline" className="w-full sm:w-auto" asChild>
-            <Link href="/support">
-              <HelpCircle className="mr-2 h-4 w-4" />
-              Get Help
             </Link>
           </Button>
         </CardFooter>

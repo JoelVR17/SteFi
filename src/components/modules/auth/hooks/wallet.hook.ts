@@ -1,10 +1,14 @@
+"use client";
 import { ISupportedWallet } from "@creit.tech/stellar-wallets-kit";
 import { useGlobalAuthenticationStore } from "../store/store";
 import { kit } from "@/lib/stellar-wallet-kit";
+import { useRouter } from "next/navigation";
 
 export const useWallet = () => {
   const { connectWalletStore, disconnectWalletStore } =
     useGlobalAuthenticationStore();
+
+  const router = useRouter();
 
   const connectWallet = async () => {
     await kit.openModal({
@@ -15,7 +19,17 @@ export const useWallet = () => {
         const { address } = await kit.getAddress();
         const { name } = option;
 
-        connectWalletStore(address, name);
+        const user = await connectWalletStore(address, name);
+
+        console.log(user?.role);
+
+        if (user?.role === "client") {
+          router.push("/client");
+        } else if (user?.role === "assetProvider") {
+          router.push("/asset-provider");
+        } else {
+          router.push("/client");
+        }
       },
     });
   };
