@@ -6,7 +6,7 @@ import {
   getUser,
   updateUser,
 } from "@/components/modules/auth/server/authentication.firebase";
-import { UserPayload } from "@/@types/user.entity";
+import { User, UserPayload } from "@/@types/user.entity";
 import { toast } from "sonner";
 
 const AUTHENTICATION_ACTIONS = {
@@ -97,7 +97,10 @@ export const useGlobalAuthenticationSlice: StateCreator<
       );
     },
 
-    updateUser: async (address: string, payload: UserPayload) => {
+    updateUser: async (
+      address: string,
+      payload: UserPayload
+    ): Promise<User> => {
       const { success, data } = await updateUser({ address, payload });
 
       if (success) {

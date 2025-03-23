@@ -6,6 +6,7 @@ import {
 } from "../schema/update-user.schema";
 import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
 import { useRouter } from "next/navigation";
+import { User } from "@/@types/user.entity";
 
 export const useEditProfileDialog = () => {
   const router = useRouter();
@@ -26,7 +27,7 @@ export const useEditProfileDialog = () => {
   });
 
   const onSubmit = async (payload: any) => {
-    const user = await updateUser(address, payload);
+    const user: User = await updateUser(address, payload);
 
     if (user.role == "assetProvider") {
       router.push("/asset-provider");

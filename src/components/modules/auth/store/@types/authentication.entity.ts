@@ -8,6 +8,6 @@ export interface AuthenticationGlobalStore {
 
   connectWalletStore: (address: string, name: string) => User | null;
   disconnectWalletStore: () => void;
-  updateUser: (address: string, payload: UserPayload) => void;
+  updateUser: (address: string, payload: UserPayload) => User;
   setIsUserCreatedWithName: (isUserCreatedWithName: boolean) => void;
 }
