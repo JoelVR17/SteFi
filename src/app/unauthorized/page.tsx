@@ -19,7 +19,7 @@ export default function UnauthorizedPage() {
           </div>
           <CardTitle className="text-3xl font-bold">Unauthorized</CardTitle>
           <p className="text-muted-foreground">
-            You don't have permission to access this resource
+            You dont have permission to access this resource
           </p>
         </CardHeader>
         <CardContent className="text-center space-y-4 pt-4">

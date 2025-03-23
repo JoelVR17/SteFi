@@ -1,9 +1,6 @@
 import { db } from "@/core/config/firebase/firebase";
 import {
-  doc,
-  setDoc,
   getDoc,
-  updateDoc,
   serverTimestamp,
   collection,
   DocumentReference,

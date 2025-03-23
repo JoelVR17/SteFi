@@ -5,12 +5,8 @@ import { kit } from "@/lib/stellar-wallet-kit";
 import { useRouter } from "next/navigation";
 
 export const useWallet = () => {
-  const {
-    connectWalletStore,
-    disconnectWalletStore,
-    loggedUser,
-    isUserCreatedWithName,
-  } = useGlobalAuthenticationStore();
+  const { connectWalletStore, disconnectWalletStore, isUserCreatedWithName } =
+    useGlobalAuthenticationStore();
 
   const router = useRouter();
 

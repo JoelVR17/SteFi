@@ -45,8 +45,6 @@ export const useFormHook = () => {
       monthly_payout: convertedMonthlyPayout,
     };
 
-    console.log(payload);
-
     const response = await addAsset({ payload });
 
     if (response.success) {
