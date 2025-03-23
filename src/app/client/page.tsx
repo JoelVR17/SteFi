@@ -1,23 +1,27 @@
 "use client";
 
-import { Search } from "lucide-react";
 import AssetCard from "../../components/modules/asset/ui/AssetCard";
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { getAssetsByUser } from "@/components/modules/asset/server/asset.service";
 import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
+import { AssetWithId } from "@/@types/asset.entity";
 
 export default function Page() {
   const address = useGlobalAuthenticationStore((state) => state.address);
-  const [assets, setAssets] = useState([]);
+  const [assets, setAssets] = useState<AssetWithId[]>([]);
 
   useEffect(() => {
     const fetchAssets = async () => {
       try {
         const assetsData = await getAssetsByUser("client", address);
-        setAssets(assetsData.data);
+        if (assetsData?.data) {
+          setAssets(assetsData.data);
+        } else {
+          setAssets([]);
+        }
       } catch (error) {
         console.error("Error fetching assets:", error);
+        setAssets([]);
       }
     };
 
