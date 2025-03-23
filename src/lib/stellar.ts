@@ -25,7 +25,7 @@ export function buildInvokeContractOperation(
   wasmHash: string,
   operationFunc: string,
   initFunc: string,
-  operations: any[]
+  operations: any[],
 ): StellarSDK.xdr.Operation {
   const wasmHashBytes = StellarSDK.nativeToScVal(Buffer.from(wasmHash, "hex"), {
     type: "bytes",
@@ -39,7 +39,7 @@ export function buildInvokeContractOperation(
     func: StellarSDK.xdr.HostFunction.hostFunctionTypeInvokeContract(
       new StellarSDK.xdr.InvokeContractArgs({
         contractAddress: new StellarSDK.Address(
-          deployerContractAddress
+          deployerContractAddress,
         ).toScAddress(),
         functionName: operationFunc,
         args: [
@@ -47,9 +47,9 @@ export function buildInvokeContractOperation(
           wasmHashBytes,
           salt,
           StellarSDK.nativeToScVal(initFunc, { type: "symbol" }),
-          StellarSDK.nativeToScVal(operations, { type: "vec" }),
+          StellarSDK.nativeToScVal(operations, { type: "vec" }), // Aquí usas el array operations directamente
         ],
-      })
+      }),
     ),
   });
 
