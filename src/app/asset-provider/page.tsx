@@ -38,6 +38,7 @@ import { FormProvider } from "react-hook-form";
 import { getAssetsByUser } from "@/components/modules/asset/server/asset.service";
 import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
 import Link from "next/link";
+import { shortenAddress } from "../../components/modules/client/hooks/useShortenAddress.hook";
 
 export default function AssetProviderDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,16 +49,16 @@ export default function AssetProviderDashboard() {
 
   const [assets, setAssets] = useState<AssetWithId[]>([]);
 
-  useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        const assetsData = await getAssetsByUser("asset_provider", address);
-        setAssets(assetsData.data);
-      } catch (error) {
-        console.error("Error fetching assets:", error);
-      }
-    };
+  const fetchAssets = async () => {
+    try {
+      const assetsData = await getAssetsByUser("asset_provider", address);
+      setAssets(assetsData.data);
+    } catch (error) {
+      console.error("Error fetching assets:", error);
+    }
+  };
 
+  useEffect(() => {
     if (address) {
       fetchAssets();
     }
@@ -140,7 +141,7 @@ export default function AssetProviderDashboard() {
                         </div>
                       </TableCell>
                       <TableCell className="truncate w-12">
-                        <span>{asset?.client}</span>
+                        <span>{shortenAddress(asset?.client)}</span>
                       </TableCell>
                       <TableCell>{formatCurrency(asset.monthly_fee)}</TableCell>
                       <TableCell>{formatDate(asset.deadline)}</TableCell>
@@ -186,6 +187,7 @@ export default function AssetProviderDashboard() {
             <form
               onSubmit={form.handleSubmit(async (data) => {
                 await onSubmit(data);
+                await fetchAssets();
                 handleCloseModal();
               })}
               className="space-y-4"
