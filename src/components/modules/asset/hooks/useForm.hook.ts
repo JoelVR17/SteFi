@@ -28,11 +28,11 @@ export const useFormHook = () => {
   });
 
   const onSubmit = async (formData: any) => {
-    await initializeAsset(formData, address);
     const { token, monthly_payout, ...rest } = formData;
 
     const convertedMonthlyPayout: Record<string, string> = {};
     for (const [key, value] of Object.entries(monthly_payout || {})) {
+      await initializeAsset(formData, address);
       convertedMonthlyPayout[String(key)] = (value as string).toString();
     }
 

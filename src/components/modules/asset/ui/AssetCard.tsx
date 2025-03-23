@@ -25,25 +25,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { RelativeTime } from "./RelativeTime";
 import Link from "next/link";
-
-interface AssetUser {
-  name?: string;
-  avatar?: string;
-}
-
-interface Asset {
-  title: string;
-  monthly_fee: number;
-  total_fee: number;
-  purchased: boolean;
-  deadline: number;
-  next_due_date: number;
-  grace_period_end: number;
-  asset_provider: AssetUser;
-  client: AssetUser;
-  token: string;
-  image?: string;
-}
+import { Asset } from "@/@types/asset.entity";
 
 export default function AssetCard({ asset }: { asset: Asset }) {
   const [imageUrl, setImageUrl] = useState<string | null>(asset.image || null);
@@ -71,29 +53,10 @@ export default function AssetCard({ asset }: { asset: Asset }) {
 
   return (
     <Card className="w-full max-w-md overflow-hidden">
-      {/* Image Area */}
-      <div className="relative bg-muted h-48 flex items-center justify-center">
-        {imageUrl ? (
-          <img
-            src={imageUrl || "/placeholder.svg"}
-            alt={demoAsset.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-muted-foreground">
-            <ImageIcon className="h-10 w-10 mb-2" />
-            <p className="text-sm">No image available</p>
-          </div>
-        )}
-      </div>
-
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-xl font-bold">{demoAsset.title}</h2>
-            <p className="text-sm text-muted-foreground">
-              Token: {demoAsset.token}
-            </p>
           </div>
           <Badge variant={demoAsset.purchased ? "default" : "outline"}>
             {demoAsset.purchased ? (

@@ -21,79 +21,44 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useFilteredAssets } from "../../components/modules/asset/hooks/useFilteredAssets";
+import { useEffect, useState } from "react";
+import { getAssetsByUser } from "@/components/modules/asset/server/asset.service";
+import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
 
 export default function Page() {
-  const {
-    searchQuery,
-    setSearchQuery,
-    filterStatus,
-    setFilterStatus,
-    filteredAssets,
-    totalAssets,
-  } = useFilteredAssets();
+  const address = useGlobalAuthenticationStore((state) => state.address);
+  const [assets, setAssets] = useState([]);
+  const { setSearchQuery, setFilterStatus, totalAssets } = useFilteredAssets();
+
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        const assetsData = await getAssetsByUser("client", address);
+        setAssets(assetsData.data);
+      } catch (error) {
+        console.error("Error fetching assets:", error);
+      }
+    };
+
+    if (address) {
+      fetchAssets();
+    }
+  }, [address]);
 
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col space-y-2">
-          <h1 className="text-3xl font-bold">Asset Management</h1>
+          <h1 className="text-3xl font-bold">Your Assets</h1>
           <p className="text-muted-foreground">
             Browse and manage your digital assets
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search assets by title, token, provider or client..."
-              className="pl-10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          <div className="flex gap-2">
-            <Select value={filterStatus} onValueChange={setFilterStatus}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Assets</SelectItem>
-                <SelectItem value="purchased">Purchased</SelectItem>
-                <SelectItem value="not-purchased">Not Purchased</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="icon">
-                  <Filter className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Sort By</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>Title (A-Z)</DropdownMenuItem>
-                  <DropdownMenuItem>Title (Z-A)</DropdownMenuItem>
-                  <DropdownMenuItem>Price (Low to High)</DropdownMenuItem>
-                  <DropdownMenuItem>Price (High to Low)</DropdownMenuItem>
-                  <DropdownMenuItem>Due Date (Soonest)</DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-
-        <div className="text-sm text-muted-foreground">
-          Showing {filteredAssets.length} of {totalAssets} assets
-        </div>
-
-        {filteredAssets.length > 0 ? (
+        {assets.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAssets.map((asset) => (
-              <AssetCard key={asset.token} asset={asset} />
+            {assets.map((asset, index) => (
+              <AssetCard key={index} asset={asset} />
             ))}
           </div>
         ) : (

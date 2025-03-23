@@ -24,12 +24,10 @@ const Header = () => {
       </Link>
 
       <div className="flex items-center gap-3">
-        <div className="flex w-40">
-          <p className="truncate text-sm italic">{loggedUser?.name}</p>
-        </div>
-
         <div className="flex gap-3 w-40">
-          <p className="truncate text-sm italic">{address}</p>
+          <p className="truncate text-sm italic">
+            <span className="font-bold">{loggedUser?.name}</span> - {address}
+          </p>
         </div>
 
         {!address ? (

@@ -18,7 +18,11 @@ export function IsUserCreatedDialog({ isOpen }: IsUserCreatedProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onEscapeKeyDown={(e) => e.preventDefault()}
+        onPointerDownOutside={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle className="dark:text-white">Create profile</DialogTitle>
           <DialogDescription className="dark:text-gray-400">

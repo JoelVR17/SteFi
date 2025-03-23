@@ -5,8 +5,12 @@ import { kit } from "@/lib/stellar-wallet-kit";
 import { useRouter } from "next/navigation";
 
 export const useWallet = () => {
-  const { connectWalletStore, disconnectWalletStore } =
-    useGlobalAuthenticationStore();
+  const {
+    connectWalletStore,
+    disconnectWalletStore,
+    loggedUser,
+    isUserCreatedWithName,
+  } = useGlobalAuthenticationStore();
 
   const router = useRouter();
 
@@ -21,14 +25,16 @@ export const useWallet = () => {
 
         const user = await connectWalletStore(address, name);
 
-        console.log(user?.role);
+        console.log(isUserCreatedWithName);
 
-        if (user?.role === "client") {
-          router.push("/client");
-        } else if (user?.role === "assetProvider") {
-          router.push("/asset-provider");
-        } else {
-          router.push("/client");
+        if (!isUserCreatedWithName) {
+          if (user?.role === "client") {
+            router.push("/client");
+          } else if (user?.role === "assetProvider") {
+            router.push("/asset-provider");
+          } else {
+            router.push("/client");
+          }
         }
       },
     });

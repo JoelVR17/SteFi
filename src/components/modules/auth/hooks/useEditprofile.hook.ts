@@ -27,8 +27,10 @@ export const useEditProfileDialog = () => {
   });
 
   const onSubmit = async (payload: UserPayload) => {
-    await updateUser(address, payload);
-    router.push("/" + loggedUser?.role);
+    const user = await updateUser(address, payload);
+    router.push(
+      `/${user?.role == "assetProvider" ? "asset-provider" : "client"}`
+    );
   };
 
   return {

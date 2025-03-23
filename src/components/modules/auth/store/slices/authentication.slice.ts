@@ -89,6 +89,7 @@ export const useGlobalAuthenticationSlice: StateCreator<
 
     disconnectWalletStore: () => {
       deleteCookie("walletAddress", { path: "/" });
+      deleteCookie("userRole", { path: "/" });
       set(
         { address: "", name: "", loggedUser: undefined },
         false,
@@ -113,6 +114,7 @@ export const useGlobalAuthenticationSlice: StateCreator<
           description: "Your profile has been created successfully",
         });
       }
+      return data;
     },
     setIsUserCreatedWithName: (isUserCreatedWithName: boolean) =>
       set({ isUserCreatedWithName }, false),

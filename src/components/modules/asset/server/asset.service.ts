@@ -50,6 +50,7 @@ const addAsset = async ({
       };
     }
   } catch (error: any) {
+    console.error(error);
     return {
       success: false,
       message: error.message || "Something went wrong while adding asset",

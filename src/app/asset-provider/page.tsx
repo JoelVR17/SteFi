@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { useEffect, useState } from "react";
 import { Search, Filter, Download, Plus, Calendar } from "lucide-react";
 import type { Asset, AssetWithId } from "@/@types/asset.entity";
@@ -38,6 +37,7 @@ import { useFormHook } from "@/components/modules/asset/hooks/useForm.hook";
 import { FormProvider } from "react-hook-form";
 import { getAssetsByUser } from "@/components/modules/asset/server/asset.service";
 import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
+import Link from "next/link";
 
 export default function AssetProviderDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,7 +52,6 @@ export default function AssetProviderDashboard() {
     const fetchAssets = async () => {
       try {
         const assetsData = await getAssetsByUser("asset_provider", address);
-        console.log(assetsData);
         setAssets(assetsData.data);
       } catch (error) {
         console.error("Error fetching assets:", error);
@@ -73,26 +72,19 @@ export default function AssetProviderDashboard() {
     }).format(amount);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+  const formatDate = (timestamp: number) => {
+    if (!timestamp) return "-";
+    return new Date(timestamp).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
   };
 
-  const formatDateForInput = (dateString: string) => {
-    return new Date(dateString).toISOString().split("T")[0];
+  const formatDateForInput = (timestamp: number) => {
+    if (!timestamp) return "";
+    return new Date(timestamp).toISOString().split("T")[0];
   };
-
-  // Filter assets based on search query
-  const filteredAssets = assets?.filter((asset) => {
-    const matchesSearch =
-      asset.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      asset.id.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesSearch;
-  });
 
   const handleOpenModal = (asset = null) => {
     setEditingAsset(asset);
@@ -105,12 +97,6 @@ export default function AssetProviderDashboard() {
     setEditingAsset(null);
   };
 
-  const handleSaveAsset = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Saving asset:", editingAsset);
-    handleCloseModal();
-  };
-
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="space-y-6">
@@ -121,69 +107,12 @@ export default function AssetProviderDashboard() {
             <p className="text-muted-foreground">Assets you own and manage</p>
           </div>
           <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
-            <Button variant="outline">
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
-            <Button variant="outline">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
             <Button onClick={() => handleOpenModal()}>
               <Plus className="mr-2 h-4 w-4" />
               Create New Asset
             </Button>
           </div>
         </div>
-
-        {/* Search and Filter */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search assets by title, ID, or client..."
-              className="pl-10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button variant="outline" size="icon">
-            <Filter className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Summary Card */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle>Portfolio Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Total Assets</p>
-                <p className="text-2xl font-bold">{assets?.length}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Monthly Revenue</p>
-                <p className="text-2xl font-bold">
-                  {formatCurrency(
-                    assets?.reduce((sum, asset) => sum + asset.monthly_fee, 0)
-                  )}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">
-                  Total Contract Value
-                </p>
-                <p className="text-2xl font-bold">
-                  {formatCurrency(
-                    assets?.reduce((sum, asset) => sum + asset.total_fee, 0)
-                  )}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Assets Table */}
         <Card>
@@ -200,25 +129,25 @@ export default function AssetProviderDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAssets?.length > 0 ? (
-                  filteredAssets?.map((asset: AssetWithId) => (
+                {assets?.length > 0 ? (
+                  assets?.map((asset: AssetWithId) => (
                     <TableRow key={asset.id}>
                       <TableCell>
-                        <div className="font-medium">{asset.title}</div>
+                        <div className="font-medium">
+                          <Link href={"/asset-provider/" + asset.id}>
+                            {asset.title}
+                          </Link>
+                        </div>
                       </TableCell>
                       <TableCell className="truncate w-12">
                         <span>{asset?.client}</span>
                       </TableCell>
                       <TableCell>{formatCurrency(asset.monthly_fee)}</TableCell>
+                      <TableCell>{formatDate(asset.deadline)}</TableCell>
                       <TableCell>
-                        {formatDate(asset.deadline.toString())}
+                        {formatDate(asset.grace_period_end)}
                       </TableCell>
-                      <TableCell>
-                        {formatDate(asset.grace_period_end.toString())}
-                      </TableCell>
-                      <TableCell>
-                        {formatDate(asset.next_due_date.toString())}
-                      </TableCell>
+                      <TableCell>{formatDate(asset.next_due_date)}</TableCell>
                     </TableRow>
                   ))
                 ) : (
@@ -254,7 +183,13 @@ export default function AssetProviderDashboard() {
           </DialogHeader>
 
           <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form
+              onSubmit={form.handleSubmit(async (data) => {
+                await onSubmit(data);
+                handleCloseModal();
+              })}
+              className="space-y-4"
+            >
               <div className="space-y-2">
                 <FormField
                   control={form.control}
