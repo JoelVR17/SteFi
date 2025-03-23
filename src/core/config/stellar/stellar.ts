@@ -1,12 +1,12 @@
 import * as StellarSDK from "@stellar/stellar-sdk";
 
 export const horizonServer: StellarSDK.Horizon.Server =
-  new StellarSDK.Horizon.Server(`${process.env.SERVER_URL}`, {
+  new StellarSDK.Horizon.Server(`${process.env.NEXT_PUBLIC_SERVER_URL}`, {
     allowHttp: true,
   });
 
 export const sorobanServer: StellarSDK.SorobanRpc.Server =
-  new StellarSDK.SorobanRpc.Server(`${process.env.SOROBAN_SERVER_URL}`, {
+  new StellarSDK.SorobanRpc.Server("https://soroban-testnet.stellar.org/", {
     allowHttp: true,
   });
 
