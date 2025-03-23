@@ -1,3 +1,4 @@
+"use client"
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { assetSchema } from "../schema/schema";
@@ -27,7 +28,7 @@ export const useFormHook = () => {
   });
 
   const onSubmit = async (formData: any) => {
-    //await initializeAsset(formData);
+    await initializeAsset(formData);
     const { token, monthly_payout, ...rest } = formData;
 
     const convertedMonthlyPayout: Record<string, string> = {};

@@ -24,7 +24,7 @@ export const initializeAsset = async (
       address,
       wasmHash,
       "deploy",
-      "initialize_escrow",
+      "create_asset",
       operations
     );
 

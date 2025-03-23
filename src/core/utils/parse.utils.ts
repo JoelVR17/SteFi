@@ -44,8 +44,6 @@ export function parseAsset(assetProperties: Asset) {
     grace_period_end,
     asset_provider,
     client,
-    token,
-    monthly_payout,
   } = assetProperties;
 
   const monthly_fee_bps = Number(monthly_fee) * 100;
@@ -55,16 +53,20 @@ export function parseAsset(assetProperties: Asset) {
 
   return StellarSDK.xdr.ScVal.scvMap([
     new StellarSDK.xdr.ScMapEntry({
-      key: StellarSDK.xdr.ScVal.scvSymbol("total_fee"),
-      val: StellarSDK.nativeToScVal(adjustedPrice, { type: "i128" }),
-    }),
-    new StellarSDK.xdr.ScMapEntry({
-      key: StellarSDK.xdr.ScVal.scvSymbol("token"),
-      val: StellarSDK.xdr.ScVal.scvString(trustline || ""),
+      key: StellarSDK.xdr.ScVal.scvSymbol("asset_provider"),
+      val: StellarSDK.Address.fromString(asset_provider.address).toScVal(),
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("client"),
-      val: StellarSDK.Address.fromString(client.address).toScVal(),
+      val: StellarSDK.Address.fromString(client).toScVal(),
+    }),
+    new StellarSDK.xdr.ScMapEntry({
+      key: StellarSDK.xdr.ScVal.scvSymbol("deadline"),
+      val: StellarSDK.xdr.ScVal.scvU64(StellarSDK.xdr.Uint64.fromString(deadline.toString())),
+    }),
+    new StellarSDK.xdr.ScMapEntry({
+      key: StellarSDK.xdr.ScVal.scvSymbol("grace_period_end"),
+      val: StellarSDK.xdr.ScVal.scvU64(StellarSDK.xdr.Uint64.fromString(grace_period_end.toString())),
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("monthly_fee"),
@@ -73,12 +75,28 @@ export function parseAsset(assetProperties: Asset) {
       }),
     }),
     new StellarSDK.xdr.ScMapEntry({
-      key: StellarSDK.xdr.ScVal.scvSymbol("asset_provider"),
-      val: StellarSDK.Address.fromString(asset_provider.address).toScVal(),
+      key: StellarSDK.xdr.ScVal.scvSymbol("monthly_payouts"),
+      val: StellarSDK.xdr.ScVal.scvMap([]),
+    }),
+    new StellarSDK.xdr.ScMapEntry({
+      key: StellarSDK.xdr.ScVal.scvSymbol("next_due_date"),
+      val: StellarSDK.xdr.ScVal.scvU64(StellarSDK.xdr.Uint64.fromString(next_due_date.toString())),
+    }),
+    new StellarSDK.xdr.ScMapEntry({
+      key: StellarSDK.xdr.ScVal.scvSymbol("purchased"),
+      val: StellarSDK.xdr.ScVal.scvBool(purchased),
     }),
     new StellarSDK.xdr.ScMapEntry({
       key: StellarSDK.xdr.ScVal.scvSymbol("title"),
       val: StellarSDK.xdr.ScVal.scvString(title),
+    }),
+    new StellarSDK.xdr.ScMapEntry({
+      key: StellarSDK.xdr.ScVal.scvSymbol("token"),
+      val: StellarSDK.xdr.ScVal.scvString(trustline || ""),
+    }),
+    new StellarSDK.xdr.ScMapEntry({
+      key: StellarSDK.xdr.ScVal.scvSymbol("total"),
+      val: StellarSDK.nativeToScVal(adjustedPrice, { type: "i128" }),
     }),
   ]);
 }
