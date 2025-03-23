@@ -6,8 +6,8 @@ export interface AuthenticationGlobalStore {
   loggedUser: User | null;
   isUserCreatedWithName: boolean;
 
-  connectWalletStore: (address: string, name: string) => User | null;
+  connectWalletStore: (address: string, name: string) => Promise<User>;
   disconnectWalletStore: () => void;
-  updateUser: (address: string, payload: UserPayload) => User;
+  updateUser: (address: string, payload: UserPayload) => Promise<User>;
   setIsUserCreatedWithName: (isUserCreatedWithName: boolean) => void;
 }

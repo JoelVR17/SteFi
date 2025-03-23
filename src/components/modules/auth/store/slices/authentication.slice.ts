@@ -30,7 +30,10 @@ export const useGlobalAuthenticationSlice: StateCreator<
     isUserCreatedWithName: false,
 
     // Modifiers
-    connectWalletStore: async (address: string, name: string) => {
+    connectWalletStore: async (
+      address: string,
+      name: string
+    ): Promise<User> => {
       const { success, data } = await getUser({ address });
 
       let user = null;
