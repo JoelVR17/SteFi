@@ -3,8 +3,11 @@ import { useForm } from "react-hook-form";
 import { assetSchema } from "../schema/schema";
 import { addAsset } from "../server/asset.service";
 import { initializeAsset } from "../services/asset.service";
+import { useGlobalAuthenticationStore } from "../../auth/store/store";
 
 export const useFormHook = () => {
+  const address = useGlobalAuthenticationStore((state) => state.address);
+
   const form = useForm<z.infer<typeof assetSchema>>({
     //resolver: zodResolver(assetSchema),
     defaultValues: {
@@ -15,7 +18,7 @@ export const useFormHook = () => {
       deadline: Date.now(),
       next_due_date: Date.now(),
       grace_period_end: Date.now(),
-      asset_provider: { id: "", name: "" },
+      asset_provider: address,
       client: "",
       token: "",
       monthly_payout: {},
@@ -25,8 +28,6 @@ export const useFormHook = () => {
 
   const onSubmit = async (formData: any) => {
     //await initializeAsset(formData);
-
-    console.log(formData);
     const { token, monthly_payout, ...rest } = formData;
 
     const convertedMonthlyPayout: Record<string, string> = {};
@@ -37,6 +38,7 @@ export const useFormHook = () => {
     const payload = {
       ...rest,
       token: process.env.NEXT_PUBLIC_TOKEN,
+      asset_provider: address,
       monthly_payout: convertedMonthlyPayout,
     };
 

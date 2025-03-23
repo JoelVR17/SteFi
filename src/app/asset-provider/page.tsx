@@ -2,18 +2,9 @@
 
 import type React from "react";
 
-import { useState } from "react";
-import {
-  Search,
-  Filter,
-  MoreHorizontal,
-  Download,
-  Plus,
-  Calendar,
-  CreditCard,
-  User,
-  X,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Search, Filter, Download, Plus, Calendar } from "lucide-react";
+import type { Asset, AssetWithId } from "@/@types/asset.entity";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -28,14 +19,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   Table,
   TableBody,
   TableCell,
@@ -44,15 +27,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   FormControl,
   FormField,
@@ -61,17 +35,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useFormHook } from "@/components/modules/asset/hooks/useForm.hook";
-import { Form, FormProvider } from "react-hook-form";
-import {
-  leasedAssets,
-  availableClients,
-} from "@/components/modules/asset/data/leased.mock";
+import { FormProvider } from "react-hook-form";
+import { getAssetsByUser } from "@/components/modules/asset/server/asset.service";
+import { useGlobalAuthenticationStore } from "@/components/modules/auth/store/store";
 
 export default function AssetProviderDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingAsset, setEditingAsset] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("details");
+  const address = useGlobalAuthenticationStore((state) => state.address);
+
+  const [assets, setAssets] = useState<AssetWithId[]>([]);
+
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        const assetsData = await getAssetsByUser("asset_provider", address);
+        console.log(assetsData);
+        setAssets(assetsData.data);
+      } catch (error) {
+        console.error("Error fetching assets:", error);
+      }
+    };
+
+    if (address) {
+      fetchAssets();
+    }
+  }, [address]);
 
   const { form, onSubmit } = useFormHook();
 
@@ -95,11 +86,10 @@ export default function AssetProviderDashboard() {
   };
 
   // Filter assets based on search query
-  const filteredAssets = leasedAssets.filter((asset) => {
+  const filteredAssets = assets?.filter((asset) => {
     const matchesSearch =
       asset.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      asset.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      asset.client.name.toLowerCase().includes(searchQuery.toLowerCase());
+      asset.id.toLowerCase().includes(searchQuery.toLowerCase());
 
     return matchesSearch;
   });
@@ -117,7 +107,6 @@ export default function AssetProviderDashboard() {
 
   const handleSaveAsset = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would handle saving the asset data
     console.log("Saving asset:", editingAsset);
     handleCloseModal();
   };
@@ -172,16 +161,13 @@ export default function AssetProviderDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Total Assets</p>
-                <p className="text-2xl font-bold">{leasedAssets.length}</p>
+                <p className="text-2xl font-bold">{assets?.length}</p>
               </div>
               <div className="space-y-1">
                 <p className="text-sm text-muted-foreground">Monthly Revenue</p>
                 <p className="text-2xl font-bold">
                   {formatCurrency(
-                    leasedAssets.reduce(
-                      (sum, asset) => sum + asset.monthly_fee,
-                      0
-                    )
+                    assets?.reduce((sum, asset) => sum + asset.monthly_fee, 0)
                   )}
                 </p>
               </div>
@@ -191,10 +177,7 @@ export default function AssetProviderDashboard() {
                 </p>
                 <p className="text-2xl font-bold">
                   {formatCurrency(
-                    leasedAssets.reduce(
-                      (sum, asset) => sum + asset.total_fee,
-                      0
-                    )
+                    assets?.reduce((sum, asset) => sum + asset.total_fee, 0)
                   )}
                 </p>
               </div>
@@ -214,46 +197,27 @@ export default function AssetProviderDashboard() {
                   <TableHead>Start Date</TableHead>
                   <TableHead>End Date</TableHead>
                   <TableHead>Next Payment</TableHead>
-                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredAssets.length > 0 ? (
-                  filteredAssets.map((asset) => (
+                {filteredAssets?.length > 0 ? (
+                  filteredAssets?.map((asset: AssetWithId) => (
                     <TableRow key={asset.id}>
                       <TableCell>
                         <div className="font-medium">{asset.title}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {asset.id}
-                        </div>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <Avatar className="h-8 w-8 mr-2">
-                            <AvatarImage src={asset.client.avatar} />
-                            <AvatarFallback>
-                              {asset.client.name[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span>{asset.client.name}</span>
-                        </div>
+                      <TableCell className="truncate w-12">
+                        <span>{asset?.client}</span>
                       </TableCell>
                       <TableCell>{formatCurrency(asset.monthly_fee)}</TableCell>
-                      <TableCell>{formatDate(asset.start_date)}</TableCell>
-                      <TableCell>{formatDate(asset.end_date)}</TableCell>
-                      <TableCell>{formatDate(asset.next_payment)}</TableCell>
                       <TableCell>
-                        <Badge
-                          variant={
-                            asset.status === "active"
-                              ? "default"
-                              : asset.status === "pending"
-                              ? "outline"
-                              : "destructive"
-                          }
-                        >
-                          {asset.status}
-                        </Badge>
+                        {formatDate(asset.deadline.toString())}
+                      </TableCell>
+                      <TableCell>
+                        {formatDate(asset.grace_period_end.toString())}
+                      </TableCell>
+                      <TableCell>
+                        {formatDate(asset.next_due_date.toString())}
                       </TableCell>
                     </TableRow>
                   ))
@@ -271,26 +235,6 @@ export default function AssetProviderDashboard() {
                 )}
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
-
-        {/* Create New Asset Card */}
-        <Card
-          className="border-dashed border-2 hover:border-primary/50 transition-colors cursor-pointer"
-          onClick={() => handleOpenModal()}
-        >
-          <CardContent className="flex flex-col items-center justify-center py-8">
-            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <Plus className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="text-lg font-medium">Create New Asset</h3>
-            <p className="text-sm text-muted-foreground text-center mt-2">
-              Add a new asset to your portfolio to lease to clients
-            </p>
-            <Button className="mt-4">
-              <Plus className="mr-2 h-4 w-4" />
-              Create Asset
-            </Button>
           </CardContent>
         </Card>
       </div>

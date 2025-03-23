@@ -51,6 +51,7 @@ export const useWallet = () => {
     try {
       if (disconnectWallet) {
         await disconnectWallet();
+        router.push("/");
       }
     } catch (error) {
       console.error("Error disconnecting wallet:", error);

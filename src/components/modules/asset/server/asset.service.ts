@@ -8,6 +8,9 @@ import {
   collection,
   DocumentReference,
   addDoc,
+  query,
+  where,
+  getDocs,
 } from "firebase/firestore";
 import { AssetPayload } from "@/@types/asset.entity";
 
@@ -54,41 +57,44 @@ const addAsset = async ({
   }
 };
 
-const getAsset = async (
-  token: string
+const getAssetsByUser = async (
+  role: "client" | "asset_provider",
+  address: string
 ): Promise<{
   success: boolean;
   message: string;
   data?: any;
 }> => {
+  const collectionRef = collection(db, "assets");
+
   try {
-    const assetRef = doc(collection(db, "assets"), token);
-    const snapshot = await getDoc(assetRef);
+    if (!["client", "asset_provider"].includes(role)) {
+      throw new Error("Invalid role specified");
+    }
 
-    if (snapshot.exists()) {
-      const rawData = snapshot.data();
+    const assetsCollectionSnapshot = await getDocs(
+      query(collectionRef, where(role, "==", address))
+    );
 
-      const parsedMonthlyPayout: Record<number, bigint> = {};
-      for (const [key, value] of Object.entries(rawData.monthly_payout || {})) {
-        parsedMonthlyPayout[Number(key)] = BigInt(value as string);
-      }
+    const assets = assetsCollectionSnapshot.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    }));
 
-      const asset = {
-        ...rawData,
-        monthly_payout: parsedMonthlyPayout,
-      };
+    console.log(assets);
 
-      return {
-        success: true,
-        message: `Asset ${token} found`,
-        data: asset,
-      };
-    } else {
+    if (assets.length === 0) {
       return {
         success: false,
-        message: `Asset with id ${token} not found`,
+        message: `No assets found for role ${role} with address ${address}`,
       };
     }
+
+    return {
+      success: true,
+      message: "Assets retrieved successfully",
+      data: assets,
+    };
   } catch (error: any) {
     return {
       success: false,
@@ -97,41 +103,4 @@ const getAsset = async (
   }
 };
 
-const updateAsset = async (
-  token: string,
-  payload: AssetPayload
-): Promise<{
-  success: boolean;
-  message: string;
-  data?: any;
-}> => {
-  try {
-    const assetRef = doc(collection(db, "assets"), token);
-    const snapshot = await getDoc(assetRef);
-
-    if (snapshot.exists()) {
-      await updateDoc(assetRef, {
-        ...payload,
-        updatedAt: serverTimestamp(),
-      });
-
-      return {
-        success: true,
-        message: `Asset ${token} updated successfully`,
-        data: { id: token, ...payload },
-      };
-    } else {
-      return {
-        success: false,
-        message: `Asset with id ${token} not found, cannot update.`,
-      };
-    }
-  } catch (error: any) {
-    return {
-      success: false,
-      message: error.message || "Error updating asset",
-    };
-  }
-};
-
-export { addAsset, getAsset, updateAsset };
+export { addAsset, getAssetsByUser };

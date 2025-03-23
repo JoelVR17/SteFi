@@ -8,7 +8,7 @@ export const assetSchema = z.object({
   deadline: z.number().int().positive(),
   next_due_date: z.number().int().positive(),
   grace_period_end: z.number().int().positive(),
-  asset_provider: z.object({ id: z.string(), name: z.string() }),
+  asset_provider: z.string().min(1, "Asset Provider is required"),
   client: z.string().min(1, "Client is required"),
   token: z.string().min(1, "Token is required"),
   monthly_payout: z.record(z.number().int().positive(), z.bigint()),

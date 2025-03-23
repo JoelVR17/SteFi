@@ -8,11 +8,15 @@ export interface Asset {
   next_due_date: number;
   grace_period_end: number;
   asset_provider: User;
-  client: User;
+  client: string;
   token: string;
   monthly_payout: Record<number, bigint>;
 }
 
 export interface AssetPayload extends Omit<Asset, "monthly_payout"> {
   monthly_payout: Record<string, string>;
+}
+
+export interface AssetWithId extends Asset {
+  id: string;
 }
