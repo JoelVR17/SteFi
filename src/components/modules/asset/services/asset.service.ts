@@ -10,11 +10,11 @@ import { WalletNetwork } from "@creit.tech/stellar-wallets-kit";
 import { Asset } from "@/@types/asset.entity";
 
 export const initializeAsset = async (
-  assetProperties: Asset
+  assetProperties: Asset,
+  address: string
 ): Promise<ApiResponse> => {
   try {
     const wasmHash = process.env.WASM_HASH || "";
-    const address = useGlobalAuthenticationStore((state) => state.address);
 
     const account = await sorobanServer.getAccount(address);
     const assetScVal = parseAsset(assetProperties);
